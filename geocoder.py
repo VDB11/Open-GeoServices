@@ -140,7 +140,7 @@ def process_addresses_parallel(address_list, zip_dict, logger):
     return results
 
 # Process a file of addresses in batches
-def process_address_file(input_file, output_file, zip_dict, logger, file_id=None):
+def process_address_file(input_file, output_file, zip_dict, logger, file_id=None, status_callback=None):
     # Read input file
     if input_file.endswith('.csv'):
         df = pd.read_csv(input_file, header=None)
@@ -175,6 +175,9 @@ def process_address_file(input_file, output_file, zip_dict, logger, file_id=None
         batch = address_list[i:i + BATCH_SIZE]
         batch_num = i // BATCH_SIZE + 1
         logger.info(f"Processing batch {batch_num}/{total_batches}")
+
+        if status_callback and file_id:
+            status_callback(file_id, i + len(batch), len(address_list))
         
         batch_results = process_addresses_parallel(batch, zip_dict, logger)
         
