@@ -21,6 +21,11 @@ def init_app():
     zip_dict = load_zipcode_lookup()
     logger.info(f"Loaded {len(zip_dict)} zipcode records")
 
+def update_processing_status(file_id, processed, total):
+    if file_id in PROCESSING_STATUS:
+        PROCESSING_STATUS[file_id]['processed'] = processed
+        PROCESSING_STATUS[file_id]['total'] = total
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -95,8 +100,15 @@ def geocode_bulk():
 
 def process_file_background(input_file, output_file, file_id):
     try:
-        # Process file
-        process_address_file(input_file, output_file, zip_dict, logger, file_id)
+        #Process the file with status updates
+        process_address_file(
+            input_file, 
+            output_file, 
+            zip_dict, 
+            logger, 
+            file_id,
+            status_callback=update_processing_status
+        )
         
         # Update status to completed
         PROCESSING_STATUS[file_id]['status'] = 'completed'
