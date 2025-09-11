@@ -57,9 +57,10 @@
         <div id="progressSection" style="display:none; margin-top: 20px;">
             <h3>Processing Progress</h3>
             <div id="progressBar" style="width: 100%; background-color: #f1f1f1; border-radius: 5px;">
-                <div id="progressFill" style="width: 0%; height: 20px; background-color: #4CAF50; border-radius: 5px;"></div>
+                <div id="progressFill" style="width: 0%; height: 20px; background-color: #4CAF50; border-radius: 5px; transition: width 0.5s;"></div>
             </div>
-            <p id="progressText">0% (0/0 addresses processed)</p>
+            <p id="progressText">Processing started... (0/0 addresses processed)</p>
+            <p id="fileIdDisplay" style="font-size: 12px; color: #666;"></p>
         </div>
     </div>
 
@@ -142,7 +143,9 @@
                 const fileId = data.file_id;
                 document.getElementById('bulkStatus').innerHTML = 
                     '<div class="status processing">Processing started. Please wait...</div>';
-                
+                document.getElementById('fileIdDisplay').innerText = `File ID: ${fileId}`;
+
+                localStorage.setItem('currentFileId', fileId);
                 // Check status periodically
                 const checkInterval = setInterval(() => {
                     fetch(`/status/${fileId}`)
@@ -172,16 +175,18 @@
                             document.getElementById('progressFill').style.width = '100%';
                             document.getElementById('progressText').innerText = 
                                 `100% (${statusData.total}/${statusData.total} addresses processed)`;
+                            localStorage.removeItem('currentFileId');
                         } else if (statusData.status === 'error') {
                             clearInterval(checkInterval);
                             document.getElementById('bulkStatus').innerHTML = 
                                 `<div class="status error">Error: ${statusData.error}</div>`;
+                            localStorage.removeItem('currentFileId');
                         }
                     })
                     .catch(error => {
                         console.error('Error checking status:', error);
                     });
-                }, 2000);
+                }, 1000);
             })
             .catch(error => {
                 document.getElementById('bulkStatus').innerHTML = 
