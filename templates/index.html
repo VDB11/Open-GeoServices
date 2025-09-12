@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Address Geocoder</title>
+    <title>Open GeoServices</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -11,23 +11,30 @@
         .result-table { font-size: 0.9rem; }
         .result-table th { background-color: #f8f9fa; }
         .loading { display: none; }
+        .nav-tabs .nav-link { font-weight: 500; }
     </style>
 </head>
 <body>
     <div class="container mt-4">
-        <h1 class="text-center mb-4">US Address Geocoder</h1>
+        <h1 class="text-center mb-4">Open GeoServices</h1>
         
         <ul class="nav nav-tabs" id="geocoderTabs" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="single-tab" data-bs-toggle="tab" data-bs-target="#single" type="button" role="tab">Single Address</button>
+                <button class="nav-link active" id="single-tab" data-bs-toggle="tab" data-bs-target="#single" type="button" role="tab">Geocoder</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="bulk-tab" data-bs-toggle="tab" data-bs-target="#bulk" type="button" role="tab">Bulk Geocode</button>
+                <button class="nav-link" id="reverse-tab" data-bs-toggle="tab" data-bs-target="#reverse" type="button" role="tab">Reverse Geocoder</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="elevation-tab" data-bs-toggle="tab" data-bs-target="#elevation" type="button" role="tab">Find Elevation</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="bulk-tab" data-bs-toggle="tab" data-bs-target="#bulk" type="button" role="tab">Bulk Processing</button>
             </li>
         </ul>
 
         <div class="tab-content" id="geocoderTabsContent">
-            <!-- Single Address Tab -->
+            <!-- Forward Geocode Tab -->
             <div class="tab-pane fade show active" id="single" role="tabpanel">
                 <form id="singleAddressForm">
                     <div class="mb-3">
@@ -57,18 +64,131 @@
                 <div id="singleError" class="alert alert-danger mt-3" style="display: none;"></div>
             </div>
 
-            <!-- Bulk Geocode Tab -->
-            <div class="tab-pane fade" id="bulk" role="tabpanel">
-                <form id="bulkUploadForm" enctype="multipart/form-data">
+            <!-- Reverse Geocode Tab -->
+            <div class="tab-pane fade" id="reverse" role="tabpanel">
+                <form id="reverseGeocodeForm">
                     <div class="mb-3">
-                        <label for="file" class="form-label">Upload CSV or Excel File:</label>
-                        <input class="form-control" type="file" id="file" name="file" accept=".csv,.xlsx,.xls" required>
-                        <div class="form-text">File should contain addresses in the first column, one per row.</div>
+                        <label for="coordinates" class="form-label">Enter Coordinates:</label>
+                        <input type="text" class="form-control" id="coordinates" placeholder="e.g., 38.8977, -77.0365" required>
+                        <div class="form-text">Format: latitude,longitude (e.g., 38.8977, -77.0365)</div>
                     </div>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-upload"></i> Upload and Process
+                        <i class="fas fa-map-marker-alt"></i> Reverse Geocode
                     </button>
                 </form>
+
+                <div id="reverseResult" class="mt-4" style="display: none;">
+                    <h4>Reverse Geocoding Results</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped result-table">
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reverseResultTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="reverseError" class="alert alert-danger mt-3" style="display: none;"></div>
+            </div>
+
+            <!-- Elevation Tab -->
+            <div class="tab-pane fade" id="elevation" role="tabpanel">
+                <form id="elevationForm">
+                    <div class="mb-3">
+                        <label for="elevationCoords" class="form-label">Enter Coordinates:</label>
+                        <input type="text" class="form-control" id="elevationCoords" placeholder="e.g., 38.8977, -77.0365" required>
+                        <div class="form-text">Format: latitude,longitude (e.g., 38.8977, -77.0365)</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-mountain"></i> Get Elevation
+                    </button>
+                </form>
+
+                <div id="elevationResult" class="mt-4" style="display: none;">
+                    <h4>Elevation Results</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped result-table">
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="elevationResultTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="elevationError" class="alert alert-danger mt-3" style="display: none;"></div>
+            </div>
+
+            <!-- Bulk Processing Tab -->
+            <div class="tab-pane fade" id="bulk" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">Bulk Geocoding</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="bulkGeocodeForm" enctype="multipart/form-data">
+                                    <div class="mb-3">
+                                        <label for="geocodeFile" class="form-label">Upload Address File:</label>
+                                        <input class="form-control" type="file" id="geocodeFile" name="file" accept=".csv,.xlsx,.xls" required>
+                                        <div class="form-text">CSV/Excel with addresses in first column</div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-upload"></i> Process Addresses
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">Reverse Geocoding</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="bulkReverseForm" enctype="multipart/form-data">
+                                    <div class="mb-3">
+                                        <label for="reverseFile" class="form-label">Upload Coordinates File:</label>
+                                        <input class="form-control" type="file" id="reverseFile" name="file" accept=".csv,.xlsx,.xls" required>
+                                        <div class="form-text">CSV/Excel with coordinates in first column</div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-upload"></i> Process Coordinates
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">Elevation Finder</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="bulkElevationForm" enctype="multipart/form-data">
+                                    <div class="mb-3">
+                                        <label for="elevationFile" class="form-label">Upload Coordinates File:</label>
+                                        <input class="form-control" type="file" id="elevationFile" name="file" accept=".csv,.xlsx,.xls" required>
+                                        <div class="form-text">CSV/Excel with coordinates in first column</div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-upload"></i> Get Elevations
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div id="bulkResult" class="mt-4" style="display: none;">
                     <h4>Processing Complete</h4>
@@ -154,10 +274,118 @@
             }
         });
 
-        // Bulk upload form submission
-        document.getElementById('bulkUploadForm').addEventListener('submit', async function(e) {
+        // Reverse geocode form submission
+        document.getElementById('reverseGeocodeForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const fileInput = document.getElementById('file');
+            const coordinates = document.getElementById('coordinates').value.trim();
+            const resultDiv = document.getElementById('reverseResult');
+            const errorDiv = document.getElementById('reverseError');
+            
+            resultDiv.style.display = 'none';
+            errorDiv.style.display = 'none';
+
+            try {
+                const response = await fetch('/reverse-geocode/single', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({ coordinates })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    const tableBody = document.getElementById('reverseResultTableBody');
+                    tableBody.innerHTML = '';
+                    
+                    for (const [key, value] of Object.entries(data)) {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td><strong>${key.replace('_', ' ').toUpperCase()}</strong></td>
+                            <td>${value || 'N/A'}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    }
+                    
+                    resultDiv.style.display = 'block';
+                } else {
+                    errorDiv.textContent = data.error || 'An error occurred';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                errorDiv.textContent = 'Network error: ' + error.message;
+                errorDiv.style.display = 'block';
+            }
+        });
+
+        // Elevation form submission
+        document.getElementById('elevationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const coordinates = document.getElementById('elevationCoords').value.trim();
+            const resultDiv = document.getElementById('elevationResult');
+            const errorDiv = document.getElementById('elevationError');
+            
+            resultDiv.style.display = 'none';
+            errorDiv.style.display = 'none';
+
+            try {
+                const response = await fetch('/elevation/single', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({ coordinates })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    const tableBody = document.getElementById('elevationResultTableBody');
+                    tableBody.innerHTML = '';
+                    
+                    for (const [key, value] of Object.entries(data)) {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td><strong>${key.replace('_', ' ').toUpperCase()}</strong></td>
+                            <td>${value || 'N/A'}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    }
+                    
+                    resultDiv.style.display = 'block';
+                } else {
+                    errorDiv.textContent = data.error || 'An error occurred';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                errorDiv.textContent = 'Network error: ' + error.message;
+                errorDiv.style.display = 'block';
+            }
+        });
+
+        // Bulk geocode form submission
+        document.getElementById('bulkGeocodeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('geocodeFile');
+            await processBulkFile(fileInput, '/geocode/bulk');
+        });
+
+        // Bulk reverse geocode form submission
+        document.getElementById('bulkReverseForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('reverseFile');
+            await processBulkFile(fileInput, '/reverse-geocode/bulk');
+        });
+
+        // Bulk elevation form submission
+        document.getElementById('bulkElevationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('elevationFile');
+            await processBulkFile(fileInput, '/elevation/bulk');
+        });
+
+        async function processBulkFile(fileInput, endpoint) {
             const resultDiv = document.getElementById('bulkResult');
             const errorDiv = document.getElementById('bulkError');
             const loadingDiv = document.getElementById('bulkLoading');
@@ -170,7 +398,7 @@
             formData.append('file', fileInput.files[0]);
 
             try {
-                const response = await fetch('/geocode/bulk', {
+                const response = await fetch(endpoint, {
                     method: 'POST',
                     body: formData
                 });
@@ -193,7 +421,7 @@
                 errorDiv.textContent = 'Network error: ' + error.message;
                 errorDiv.style.display = 'block';
             }
-        });
+        }
 
         // Load file list when bulk tab is shown
         document.getElementById('bulk-tab').addEventListener('shown.bs.tab', function() {
