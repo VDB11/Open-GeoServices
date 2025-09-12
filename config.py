@@ -5,6 +5,7 @@ UPLOAD_FOLDER = 'uploads'
 OUTPUT_FOLDER = 'outputs'
 LOG_FOLDER = 'geo_logs'
 TEMPLATE_FOLDER = 'templates'
+DATA_FILE_PATH = "ETOPO_2022_v1_30s_N90W180_surface.nc"
 
 # Create directories if they don't exist
 for folder in [UPLOAD_FOLDER, OUTPUT_FOLDER, LOG_FOLDER, TEMPLATE_FOLDER]:
@@ -20,3 +21,7 @@ ZIPCODE_LOOKUP_FILE = 'usa_postcode_lookup.csv'
 BATCH_SIZE = 10
 MAX_WORKERS = 5
 REQUEST_TIMEOUT = 5
+
+# Reverse Geocoding Settings
+REVERSE_GEOCODING_TIMEOUT = 10
+REVERSE_GEOCODING_DELAY = 1
