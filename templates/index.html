@@ -4,195 +4,240 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Address Geocoder</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
-        .tab { overflow: hidden; border: 1px solid #ccc; background-color: #f1f1f1; }
-        .tab button { background-color: inherit; float: left; border: none; outline: none; 
-                     cursor: pointer; padding: 14px 16px; transition: 0.3s; }
-        .tab button:hover { background-color: #ddd; }
-        .tab button.active { background-color: #ccc; }
-        .tabcontent { display: none; padding: 20px; border: 1px solid #ccc; border-top: none; }
-        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        .status { margin-top: 20px; padding: 10px; }
-        .success { background-color: #d4edda; color: #155724; }
-        .error { background-color: #f8d7da; color: #721c24; }
-        .processing { background-color: #fff3cd; color: #856404; }
+        .tab-content { padding: 20px; border: 1px solid #dee2e6; border-top: none; }
+        .result-table { font-size: 0.9rem; }
+        .result-table th { background-color: #f8f9fa; }
+        .loading { display: none; }
     </style>
 </head>
 <body>
-    <h1>Address Geocoder</h1>
-    
-    <div class="tab">
-        <button class="tablinks active" onclick="openTab(event, 'Single')">Single Address</button>
-        <button class="tablinks" onclick="openTab(event, 'Bulk')">Bulk Geocoding</button>
-    </div>
-    
-    <div id="Single" class="tabcontent" style="display:block;">
-        <h2>Single Address Geocoding</h2>
-        <form id="singleForm">
-            <label for="address">Address:</label><br>
-            <input type="text" id="address" name="address" size="50" 
-                   placeholder="Enter full address"><br><br>
-            <button type="submit">Geocode</button>
-        </form>
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">US Address Geocoder</h1>
         
-        <div id="singleResult"></div>
-    </div>
-    
-    <div id="Bulk" class="tabcontent">
-        <h2>Bulk Address Geocoding</h2>
-        <form id="bulkForm" enctype="multipart/form-data">
-            <label for="file">Select CSV or Excel file:</label><br>
-            <input type="file" id="file" name="file" accept=".csv,.xlsx,.xls"><br><br>
-            <button type="submit">Upload and Process</button>
-        </form>
-        
-        <div id="bulkStatus"></div>
-        <div id="downloadSection" style="display:none;">
-            <p>Processing complete. <a id="downloadLink" href="#">Download results</a></p>
-        </div>
-        
-        <div id="progressSection" style="display:none; margin-top: 20px;">
-            <h3>Processing Progress</h3>
-            <div id="progressBar" style="width: 100%; background-color: #f1f1f1; border-radius: 5px;">
-                <div id="progressFill" style="width: 0%; height: 20px; background-color: #4CAF50; border-radius: 5px; transition: width 0.5s;"></div>
+        <ul class="nav nav-tabs" id="geocoderTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="single-tab" data-bs-toggle="tab" data-bs-target="#single" type="button" role="tab">Single Address</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="bulk-tab" data-bs-toggle="tab" data-bs-target="#bulk" type="button" role="tab">Bulk Geocode</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="geocoderTabsContent">
+            <!-- Single Address Tab -->
+            <div class="tab-pane fade show active" id="single" role="tabpanel">
+                <form id="singleAddressForm">
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Enter Address:</label>
+                        <textarea class="form-control" id="address" rows="3" placeholder="e.g., 1600 Pennsylvania Ave NW, Washington, DC 20500" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search-location"></i> Geocode Address
+                    </button>
+                </form>
+
+                <div id="singleResult" class="mt-4" style="display: none;">
+                    <h4>Geocoding Results</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped result-table">
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resultTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="singleError" class="alert alert-danger mt-3" style="display: none;"></div>
             </div>
-            <p id="progressText">Processing started... (0/0 addresses processed)</p>
-            <p id="fileIdDisplay" style="font-size: 12px; color: #666;"></p>
+
+            <!-- Bulk Geocode Tab -->
+            <div class="tab-pane fade" id="bulk" role="tabpanel">
+                <form id="bulkUploadForm" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Upload CSV or Excel File:</label>
+                        <input class="form-control" type="file" id="file" name="file" accept=".csv,.xlsx,.xls" required>
+                        <div class="form-text">File should contain addresses in the first column, one per row.</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-upload"></i> Upload and Process
+                    </button>
+                </form>
+
+                <div id="bulkResult" class="mt-4" style="display: none;">
+                    <h4>Processing Complete</h4>
+                    <p id="resultMessage"></p>
+                    <a id="downloadLink" href="#" class="btn btn-success">
+                        <i class="fas fa-download"></i> Download Results
+                    </a>
+                </div>
+
+                <div id="bulkError" class="alert alert-danger mt-3" style="display: none;"></div>
+
+                <div class="loading text-center mt-4" id="bulkLoading">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Processing...</span>
+                    </div>
+                    <p class="mt-2">Processing your file, please wait...</p>
+                </div>
+
+                <div class="mt-4" id="fileListSection" style="display: none;">
+                    <h5>Previously Processed Files</h5>
+                    <div class="table-responsive">
+                        <table class="table table-sm" id="fileListTable">
+                            <thead>
+                                <tr>
+                                    <th>Filename</th>
+                                    <th>Size</th>
+                                    <th>Modified</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function openTab(evt, tabName) {
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tabcontent");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-            }
-            tablinks = document.getElementsByClassName("tablinks");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-            document.getElementById(tabName).style.display = "block";
-            evt.currentTarget.className += " active";
-        }
-        
-        // Single address form handling
-        document.getElementById('singleForm').addEventListener('submit', function(e) {
+        // Single address form submission
+        document.getElementById('singleAddressForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const address = document.getElementById('address').value;
+            const address = document.getElementById('address').value.trim();
+            const resultDiv = document.getElementById('singleResult');
+            const errorDiv = document.getElementById('singleError');
             
-            fetch('/geocode/single', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ address: address })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    document.getElementById('singleResult').innerHTML = 
-                        `<div class="status error">Error: ${data.error}</div>`;
-                    return;
+            resultDiv.style.display = 'none';
+            errorDiv.style.display = 'none';
+
+            try {
+                const response = await fetch('/geocode/single', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({ address })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    const tableBody = document.getElementById('resultTableBody');
+                    tableBody.innerHTML = '';
+                    
+                    for (const [key, value] of Object.entries(data)) {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td><strong>${key.replace('_', ' ').toUpperCase()}</strong></td>
+                            <td>${value || 'N/A'}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    }
+                    
+                    resultDiv.style.display = 'block';
+                } else {
+                    errorDiv.textContent = data.error || 'An error occurred';
+                    errorDiv.style.display = 'block';
                 }
-                
-                // Create table with results
-                let tableHtml = `<h3>Geocoding Results</h3><table>
-                    <tr><th>Field</th><th>Value</th></tr>`;
-                
-                for (const [key, value] of Object.entries(data)) {
-                    tableHtml += `<tr><td>${key}</td><td>${value || 'N/A'}</td></tr>`;
-                }
-                
-                tableHtml += '</table>';
-                document.getElementById('singleResult').innerHTML = tableHtml;
-            })
-            .catch(error => {
-                document.getElementById('singleResult').innerHTML = 
-                    `<div class="status error">Error: ${error.message}</div>`;
-            });
+            } catch (error) {
+                errorDiv.textContent = 'Network error: ' + error.message;
+                errorDiv.style.display = 'block';
+            }
         });
-        
-        // Bulk upload form handling
-        document.getElementById('bulkForm').addEventListener('submit', function(e) {
+
+        // Bulk upload form submission
+        document.getElementById('bulkUploadForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const fileInput = document.getElementById('file');
+            const resultDiv = document.getElementById('bulkResult');
+            const errorDiv = document.getElementById('bulkError');
+            const loadingDiv = document.getElementById('bulkLoading');
+            
+            resultDiv.style.display = 'none';
+            errorDiv.style.display = 'none';
+            loadingDiv.style.display = 'block';
+
             const formData = new FormData();
             formData.append('file', fileInput.files[0]);
-            
-            document.getElementById('bulkStatus').innerHTML = 
-                '<div class="status processing">Uploading and processing file...</div>';
-            document.getElementById('progressSection').style.display = 'block';
-            document.getElementById('downloadSection').style.display = 'none';
-            
-            fetch('/geocode/bulk', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    document.getElementById('bulkStatus').innerHTML = 
-                        `<div class="status error">Error: ${data.error}</div>`;
-                    return;
-                }
-                
-                const fileId = data.file_id;
-                document.getElementById('bulkStatus').innerHTML = 
-                    '<div class="status processing">Processing started. Please wait...</div>';
-                document.getElementById('fileIdDisplay').innerText = `File ID: ${fileId}`;
 
-                localStorage.setItem('currentFileId', fileId);
-                // Check status periodically
-                const checkInterval = setInterval(() => {
-                    fetch(`/status/${fileId}`)
-                    .then(response => response.json())
-                    .then(statusData => {
-                        if (statusData.error) {
-                            clearInterval(checkInterval);
-                            document.getElementById('bulkStatus').innerHTML = 
-                                `<div class="status error">Error: ${statusData.error}</div>`;
-                            return;
-                        }
-                        
-                        // Update progress
-                        if (statusData.total > 0) {
-                            const percent = Math.round((statusData.processed / statusData.total) * 100);
-                            document.getElementById('progressFill').style.width = `${percent}%`;
-                            document.getElementById('progressText').innerText = 
-                                `${percent}% (${statusData.processed}/${statusData.total} addresses processed)`;
-                        }
-                        
-                        if (statusData.status === 'completed') {
-                            clearInterval(checkInterval);
-                            document.getElementById('bulkStatus').innerHTML = 
-                                '<div class="status success">Processing completed!</div>';
-                            document.getElementById('downloadSection').style.display = 'block';
-                            document.getElementById('downloadLink').href = `/download/${fileId}`;
-                            document.getElementById('progressFill').style.width = '100%';
-                            document.getElementById('progressText').innerText = 
-                                `100% (${statusData.total}/${statusData.total} addresses processed)`;
-                            localStorage.removeItem('currentFileId');
-                        } else if (statusData.status === 'error') {
-                            clearInterval(checkInterval);
-                            document.getElementById('bulkStatus').innerHTML = 
-                                `<div class="status error">Error: ${statusData.error}</div>`;
-                            localStorage.removeItem('currentFileId');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error checking status:', error);
-                    });
-                }, 1000);
-            })
-            .catch(error => {
-                document.getElementById('bulkStatus').innerHTML = 
-                    `<div class="status error">Error: ${error.message}</div>`;
-            });
+            try {
+                const response = await fetch('/geocode/bulk', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                loadingDiv.style.display = 'none';
+
+                if (response.ok) {
+                    document.getElementById('resultMessage').textContent = 
+                        `File "${data.original_filename}" processed successfully.`;
+                    document.getElementById('downloadLink').href = `/download/${data.output_filename}`;
+                    resultDiv.style.display = 'block';
+                    loadFileList();
+                } else {
+                    errorDiv.textContent = data.error || 'An error occurred';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                loadingDiv.style.display = 'none';
+                errorDiv.textContent = 'Network error: ' + error.message;
+                errorDiv.style.display = 'block';
+            }
         });
+
+        // Load file list when bulk tab is shown
+        document.getElementById('bulk-tab').addEventListener('shown.bs.tab', function() {
+            loadFileList();
+        });
+
+        async function loadFileList() {
+            try {
+                const response = await fetch('/list-files');
+                const data = await response.json();
+                
+                if (response.ok && data.files.length > 0) {
+                    const tableBody = document.querySelector('#fileListTable tbody');
+                    tableBody.innerHTML = '';
+                    
+                    data.files.forEach(file => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${file.filename}</td>
+                            <td>${formatFileSize(file.size)}</td>
+                            <td>${file.modified}</td>
+                            <td>
+                                <a href="/download/${file.filename}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-download"></i> Download
+                                </a>
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                    
+                    document.getElementById('fileListSection').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error loading file list:', error);
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
     </script>
 </body>
 </html>
