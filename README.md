@@ -157,7 +157,11 @@ Access the application at: `http://localhost:5000`
 ### Logs
 Check `geo_logs/` directory for detailed error logs and processing history
 
-## 📝 License
+## 📝 Contact and License
+
+For any feedbacks or suggestions:
+- **Author**: [Vishal Bharadwaj](https://github.com/VDB11)
+- **Email**: <vishaldb11@gmail.com>
 
 This project uses open data sources. Please ensure compliance with the following when forking or modifying:
 - US Census Bureau API terms of service
