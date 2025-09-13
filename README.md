@@ -159,7 +159,7 @@ Check `geo_logs/` directory for detailed error logs and processing history
 
 ## 📝 License
 
-This project uses only open source data. Please ensure compliance with the following while forking or changing:
+This project uses open data sources. Please ensure compliance with the following when forking or modifying:
 - US Census Bureau API terms of service
-- Nominatim usage policies
-- ETOPO dataset licensing terms
+- Nominatim usage policies  
+- NOAA ETOPO dataset licensing terms
