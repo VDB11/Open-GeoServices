@@ -89,18 +89,28 @@ pip install -r requirements.txt
 4. **Directory structure (auto-created on first run):**
 ```
 Open-GeoServices/
-├── uploads/           # Temporary file storage (user uploads)
-├── outputs/           # Processed results (downloadable files)
-├── geo_logs/          # Application logs
-├── templates/         # HTML templates
-├── app.py             # Main Flask application
-├── config.py          # Configuration settings
-├── geocoder.py        # Forward geocoding functionality
-├── reverse_geocoding.py # Reverse geocoding functionality
-├── elevation_finder.py # Elevation lookup service
-├── run.py             # Application runner
-├── requirements.txt   # Python dependencies
-└── ETOPO_2022_v1_30s_N90W180_surface.nc  # Raster dataset
+├── images/                    # Screenshots for documentation
+│   ├── forward-geocoding.png
+│   ├── reverse-geocoding.png
+│   ├── elevation-lookup.png
+│   └── bulk-processing.png
+├── uploads/                   # Temporary file storage (user uploads)
+│   └── .gitkeep (input files) # Keep empty directory in git
+├── outputs/                   # Processed results (downloadable files)
+│   └── .gitkeep (output files) # Keep empty directory in git
+├── geo_logs/                  # Application logs
+│   └── .gitkeep (service logs) # Keep empty directory in git
+├── templates/                 # HTML templates
+│   └── index.html             # Main web interface template
+├── app.py                     # Main Flask application
+├── config.py                  # Configuration settings
+├── geocoder.py                # Forward geocoding functionality
+├── reverse_geocoding.py       # Reverse geocoding functionality
+├── elevation_finder.py        # Elevation lookup service
+├── run.py                     # Application runner
+├── requirements.txt           # Python dependencies
+├── README.md                  # Project documentation
+├── .gitignore                 # Git ignore file
 ```
 
 ## 📖 Usage
