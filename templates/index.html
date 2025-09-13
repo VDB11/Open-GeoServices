@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open GeoServices</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #64748b;
+            --background-light: #f8fafc;
+            --border-light: #e2e8f0;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-light);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .header {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            margin: 0.5rem 0 0 0;
+            font-size: 1rem;
+        }
+
+        .nav-tabs {
+            background: white;
+            border-radius: 12px 12px 0 0;
+            border: none;
+            padding: 1rem 1rem 0 1rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            padding: 0.75rem 1.25rem;
+            margin-right: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-tabs .nav-link:hover {
+            color: var(--primary-color);
+            background-color: var(--background-light);
+            border-color: transparent;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            background-color: var(--background-light);
+            border-color: transparent;
+        }
+
+        .tab-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 0 0 12px 12px;
+            box-shadow: var(--card-shadow);
+            border: none;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control, .form-select {
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-text {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .btn {
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            box-shadow: 0 1px 2px 0 rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px 0 rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+        }
+
+        .btn-success:hover {
+            background-color: #059669;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            background: transparent;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .card-header {
+            background-color: var(--background-light);
+            border-bottom: 1px solid var(--border-light);
+            border-radius: 12px 12px 0 0 !important;
+            padding: 1.25rem;
+        }
+
+        .card-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .result-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .result-section h4 {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table th {
+            background-color: var(--background-light);
+            color: var(--text-primary);
+            font-weight: 600;
+            border: none;
+            padding: 0.875rem;
+            font-size: 0.875rem;
+        }
+
+        .table td {
+            padding: 0.875rem;
+            border-top: 1px solid var(--border-light);
+            font-size: 0.9rem;
+        }
+
+        .table-striped > tbody > tr:nth-of-type(odd) > td {
+            background-color: rgba(248, 250, 252, 0.5);
+        }
+
+        .alert {
+            border: none;
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            font-weight: 500;
+        }
+
+        .alert-danger {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner-border {
+            color: var(--primary-color);
+        }
+
+        .loading p {
+            color: var(--text-secondary);
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+
+        .bulk-cards {
+            gap: 1.5rem;
+        }
+
+        .file-list-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .file-list-section h5 {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 0.875rem;
+            font-size: 0.875rem;
+        }
+
+        .icon-prefix {
+            margin-right: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem 0.5rem;
+            }
+            
+            .header {
+                padding: 1.5rem;
+            }
+            
+            .tab-content {
+                padding: 1.5rem;
+            }
+            
+            .nav-tabs {
+                padding: 0.5rem 0.5rem 0 0.5rem;
+            }
+            
+            .nav-tabs .nav-link {
+                padding: 0.625rem 1rem;
+                margin-right: 0.25rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header">
+            <h1><i class="fas fa-globe-americas icon-prefix"></i>Open GeoServices</h1>
+            <p>Professional geocoding and other geospatial services</p>
+        </div>
+        
+        <ul class="nav nav-tabs" id="geocoderTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="single-tab" data-bs-toggle="tab" data-bs-target="#single" type="button" role="tab">
+                    <i class="fas fa-search-location icon-prefix"></i>Geocoder
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="reverse-tab" data-bs-toggle="tab" data-bs-target="#reverse" type="button" role="tab">
+                    <i class="fas fa-map-marker-alt icon-prefix"></i>Reverse Geocoder
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="elevation-tab" data-bs-toggle="tab" data-bs-target="#elevation" type="button" role="tab">
+                    <i class="fas fa-mountain icon-prefix"></i>Find Elevation
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="bulk-tab" data-bs-toggle="tab" data-bs-target="#bulk" type="button" role="tab">
+                    <i class="fas fa-layer-group icon-prefix"></i>Bulk Processing
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="geocoderTabsContent">
+            <!-- Forward Geocode Tab -->
+            <div class="tab-pane fade show active" id="single" role="tabpanel">
+                <form id="singleAddressForm">
+                    <div class="mb-4">
+                        <label for="address" class="form-label">Enter Address</label>
+                        <textarea class="form-control" id="address" rows="3" placeholder="e.g., 1600 Pennsylvania Ave NW, Washington, DC 20500" required></textarea>
+                        <div class="form-text">Enter the complete address you want to geocode</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search-location icon-prefix"></i>Geocode Address
+                    </button>
+                </form>
+
+                <div id="singleResult" class="result-section" style="display: none;">
+                    <h4><i class="fas fa-map-marked-alt icon-prefix"></i>Geocoding Results</h4>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resultTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="singleError" class="alert alert-danger" style="display: none;"></div>
+            </div>
+
+            <!-- Reverse Geocode Tab -->
+            <div class="tab-pane fade" id="reverse" role="tabpanel">
+                <form id="reverseGeocodeForm">
+                    <div class="mb-4">
+                        <label for="coordinates" class="form-label">Enter Coordinates</label>
+                        <input type="text" class="form-control" id="coordinates" placeholder="e.g., 38.8977, -77.0365" required>
+                        <div class="form-text">Format: latitude,longitude (e.g., 38.8977, -77.0365)</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-map-marker-alt icon-prefix"></i>Reverse Geocode
+                    </button>
+                </form>
+
+                <div id="reverseResult" class="result-section" style="display: none;">
+                    <h4><i class="fas fa-location-arrow icon-prefix"></i>Reverse Geocoding Results</h4>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reverseResultTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="reverseError" class="alert alert-danger" style="display: none;"></div>
+            </div>
+
+            <!-- Elevation Tab -->
+            <div class="tab-pane fade" id="elevation" role="tabpanel">
+                <form id="elevationForm">
+                    <div class="mb-4">
+                        <label for="elevationCoords" class="form-label">Enter Coordinates</label>
+                        <input type="text" class="form-control" id="elevationCoords" placeholder="e.g., 38.8977, -77.0365" required>
+                        <div class="form-text">Format: latitude,longitude (e.g., 38.8977, -77.0365)</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-mountain icon-prefix"></i>Get Elevation
+                    </button>
+                </form>
+
+                <div id="elevationResult" class="result-section" style="display: none;">
+                    <h4><i class="fas fa-chart-line icon-prefix"></i>Elevation Results</h4>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="elevationResultTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="elevationError" class="alert alert-danger" style="display: none;"></div>
+            </div>
+
+            <!-- Bulk Processing Tab -->
+            <div class="tab-pane fade" id="bulk" role="tabpanel">
+                <div class="row">
+                    <div class="col-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5 class="card-title">
+                                    <i class="fas fa-upload icon-prefix"></i>Bulk Geocoding
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="bulkGeocodeForm" enctype="multipart/form-data">
+                                    <div class="mb-3">
+                                        <label for="geocodeFile" class="form-label">Upload Address File</label>
+                                        <input class="form-control" type="file" id="geocodeFile" name="file" accept=".csv,.xlsx,.xls" required>
+                                        <div class="form-text">CSV/Excel with addresses in first column</div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-cogs icon-prefix"></i>Process Addresses
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5 class="card-title">
+                                    <i class="fas fa-map-marked icon-prefix"></i>Reverse Geocoding
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="bulkReverseForm" enctype="multipart/form-data">
+                                    <div class="mb-3">
+                                        <label for="reverseFile" class="form-label">Upload Coordinates File</label>
+                                        <input class="form-control" type="file" id="reverseFile" name="file" accept=".csv,.xlsx,.xls" required>
+                                        <div class="form-text">CSV/Excel with coordinates in first column</div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-cogs icon-prefix"></i>Process Coordinates
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5 class="card-title">
+                                    <i class="fas fa-chart-area icon-prefix"></i>Elevation Finder
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="bulkElevationForm" enctype="multipart/form-data">
+                                    <div class="mb-3">
+                                        <label for="elevationFile" class="form-label">Upload Coordinates File</label>
+                                        <input class="form-control" type="file" id="elevationFile" name="file" accept=".csv,.xlsx,.xls" required>
+                                        <div class="form-text">CSV/Excel with coordinates in first column</div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-cogs icon-prefix"></i>Get Elevations
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="bulkResult" class="result-section" style="display: none;">
+                    <h4><i class="fas fa-check-circle icon-prefix"></i>Processing Complete</h4>
+                    <p id="resultMessage"></p>
+                    <a id="downloadLink" href="#" class="btn btn-success">
+                        <i class="fas fa-download icon-prefix"></i>Download Results
+                    </a>
+                </div>
+
+                <div id="bulkError" class="alert alert-danger" style="display: none;"></div>
+
+                <div class="loading" id="bulkLoading" style="display: none;">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Processing...</span>
+                    </div>
+                    <p>Processing your file, please wait...</p>
+                </div>
+
+                <div class="file-list-section" id="fileListSection" style="display: none;">
+                    <h5><i class="fas fa-history icon-prefix"></i>Previously Processed Files</h5>
+                    <div class="table-responsive">
+                        <table class="table" id="fileListTable">
+                            <thead>
+                                <tr>
+                                    <th>Filename</th>
+                                    <th>Size</th>
+                                    <th>Modified</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Single address form submission
+        document.getElementById('singleAddressForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const address = document.getElementById('address').value.trim();
+            const resultDiv = document.getElementById('singleResult');
+            const errorDiv = document.getElementById('singleError');
+            
+            resultDiv.style.display = 'none';
+            errorDiv.style.display = 'none';
+
+            try {
+                const response = await fetch('/geocode/single', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({ address })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    const tableBody = document.getElementById('resultTableBody');
+                    tableBody.innerHTML = '';
+                    
+                    for (const [key, value] of Object.entries(data)) {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td><strong>${key.replace('_', ' ').toUpperCase()}</strong></td>
+                            <td>${value || 'N/A'}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    }
+                    
+                    resultDiv.style.display = 'block';
+                } else {
+                    errorDiv.textContent = data.error || 'An error occurred';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                errorDiv.textContent = 'Network error: ' + error.message;
+                errorDiv.style.display = 'block';
+            }
+        });
+
+        // Reverse geocode form submission
+        document.getElementById('reverseGeocodeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const coordinates = document.getElementById('coordinates').value.trim();
+            const resultDiv = document.getElementById('reverseResult');
+            const errorDiv = document.getElementById('reverseError');
+            
+            resultDiv.style.display = 'none';
+            errorDiv.style.display = 'none';
+
+            try {
+                const response = await fetch('/reverse-geocode/single', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({ coordinates })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    const tableBody = document.getElementById('reverseResultTableBody');
+                    tableBody.innerHTML = '';
+                    
+                    for (const [key, value] of Object.entries(data)) {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td><strong>${key.replace('_', ' ').toUpperCase()}</strong></td>
+                            <td>${value || 'N/A'}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    }
+                    
+                    resultDiv.style.display = 'block';
+                } else {
+                    errorDiv.textContent = data.error || 'An error occurred';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                errorDiv.textContent = 'Network error: ' + error.message;
+                errorDiv.style.display = 'block';
+            }
+        });
+
+        // Elevation form submission
+        document.getElementById('elevationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const coordinates = document.getElementById('elevationCoords').value.trim();
+            const resultDiv = document.getElementById('elevationResult');
+            const errorDiv = document.getElementById('elevationError');
+            
+            resultDiv.style.display = 'none';
+            errorDiv.style.display = 'none';
+
+            try {
+                const response = await fetch('/elevation/single', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({ coordinates })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    const tableBody = document.getElementById('elevationResultTableBody');
+                    tableBody.innerHTML = '';
+                    
+                    for (const [key, value] of Object.entries(data)) {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td><strong>${key.replace('_', ' ').toUpperCase()}</strong></td>
+                            <td>${value || 'N/A'}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    }
+                    
+                    resultDiv.style.display = 'block';
+                } else {
+                    errorDiv.textContent = data.error || 'An error occurred';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                errorDiv.textContent = 'Network error: ' + error.message;
+                errorDiv.style.display = 'block';
+            }
+        });
+
+        // Bulk geocode form submission
+        document.getElementById('bulkGeocodeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('geocodeFile');
+            await processBulkFile(fileInput, '/geocode/bulk');
+        });
+
+        // Bulk reverse geocode form submission
+        document.getElementById('bulkReverseForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('reverseFile');
+            await processBulkFile(fileInput, '/reverse-geocode/bulk');
+        });
+
+        // Bulk elevation form submission
+        document.getElementById('bulkElevationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('elevationFile');
+            await processBulkFile(fileInput, '/elevation/bulk');
+        });
+
+        async function processBulkFile(fileInput, endpoint) {
+            const resultDiv = document.getElementById('bulkResult');
+            const errorDiv = document.getElementById('bulkError');
+            const loadingDiv = document.getElementById('bulkLoading');
+            
+            resultDiv.style.display = 'none';
+            errorDiv.style.display = 'none';
+            loadingDiv.style.display = 'block';
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                loadingDiv.style.display = 'none';
+
+                if (response.ok) {
+                    document.getElementById('resultMessage').textContent = 
+                        `File "${data.original_filename}" processed successfully.`;
+                    document.getElementById('downloadLink').href = `/download/${data.output_filename}`;
+                    resultDiv.style.display = 'block';
+                    loadFileList();
+                } else {
+                    errorDiv.textContent = data.error || 'An error occurred';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                loadingDiv.style.display = 'none';
+                errorDiv.textContent = 'Network error: ' + error.message;
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        // Load file list when bulk tab is shown
+        document.getElementById('bulk-tab').addEventListener('shown.bs.tab', function() {
+            loadFileList();
+        });
+
+        async function loadFileList() {
+            try {
+                const response = await fetch('/list-files');
+                const data = await response.json();
+                
+                if (response.ok && data.files.length > 0) {
+                    const tableBody = document.querySelector('#fileListTable tbody');
+                    tableBody.innerHTML = '';
+                    
+                    data.files.forEach(file => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${file.filename}</td>
+                            <td>${formatFileSize(file.size)}</td>
+                            <td>${file.modified}</td>
+                            <td>
+                                <a href="/download/${file.filename}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-download"></i> Download
+                                </a>
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                    
+                    document.getElementById('fileListSection').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error loading file list:', error);
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+    </script>
+</body>
+</html>
