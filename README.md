@@ -1,6 +1,6 @@
 # OPEN GEOSERVICES
 
-A comprehensive Flask-based web application for geospatial data processing including forward geocoding, reverse geocoding, and elevation lookup services.
+A comprehensive open-source, Flask-based web application for geospatial data processing including geocoding, reverse geocoding, and elevation lookup services.
 
 ## 🌟 Features
 
@@ -57,6 +57,7 @@ pip install -r requirements.txt
    - Obtain the ETOPO 2022 dataset: `ETOPO_2022_v1_30s_N90W180_surface.nc` from 
    - Download from NOAA or other geographic data providers (Example: https://www.ncei.noaa.gov/products)
    - Place the file in the project root directory
+   - Compatible with a higher resolution (15 arc-second) version. Download the data for higher accuracy.
 
 4. **Directory structure (auto-created on first run):**
 ```
@@ -132,7 +133,7 @@ Check `geo_logs/` directory for detailed error logs and processing history
 
 ## 📝 License
 
-This project is for educational and research purposes. Please ensure compliance with:
+This project uses only open source data. Please ensure compliance with:
 - US Census Bureau API terms of service
 - Nominatim usage policies
 - ETOPO dataset licensing terms
