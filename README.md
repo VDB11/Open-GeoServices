@@ -2,13 +2,13 @@
 
 A comprehensive open-source, Flask-based web application for geospatial data processing including geocoding, reverse geocoding, and elevation lookup services. This tool combines multiple geospatial APIs and datasets into a unified platform, enabling researchers, developers, and GIS professionals to efficiently process location-based data through both interactive web interfaces and programmatic API endpoints.
 
-## 📸 Screenshots
+## 📸 Demo Screenshots
 <table>
   <tr>
     <td align="center">
       <img src="images/geocoding.png" alt="Forward Geocoding Interface" width="400"/>
       <br/>
-      <strong>Forward Geocoding</strong>
+      <strong>Geocoding</strong>
       <br/>
       <em>Convert addresses to coordinates</em>
     </td>
