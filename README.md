@@ -1,6 +1,6 @@
 # OPEN GEOSERVICES
 
-A comprehensive open-source, Flask-based web application for geospatial data processing including geocoding, reverse geocoding, and elevation lookup services. This tool combines multiple geospatial APIs and datasets into a unified platform, enabling researchers, developers, and GIS professionals to efficiently process location-based data through both interactive web interfaces and programmatic API endpoints.
+A comprehensive open-source, Flask-based web application for geospatial data processing including geocoding, reverse geocoding, and elevation lookup services. This tool combines multiple geospatial APIs and datasets into a unified platform, enabling analysts, developers, and GIS professionals to efficiently process location-based data through both interactive web interfaces and programmatic API endpoints.
 
 ## 📸 Demo Screenshots
 <table>
