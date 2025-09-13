@@ -1,0 +1,7 @@
+geo_logs
+outputs
+uploads
+*.xlsx
+*.csv
+__pycache__
+ETOPO_2022_v1_30s_N90W180_surface.nc
