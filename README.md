@@ -2,36 +2,63 @@
 
 A comprehensive open-source, Flask-based web application for geospatial data processing including geocoding, reverse geocoding, and elevation lookup services. This tool combines multiple geospatial APIs and datasets into a unified platform, enabling researchers, developers, and GIS professionals to efficiently process location-based data through both interactive web interfaces and programmatic API endpoints.
 
+## 📸 Screenshots
+<table>
+  <tr>
+    <td align="center">
+      <img src="images/geocoding.png" alt="Forward Geocoding Interface" width="400"/>
+      <br/>
+      <strong>Forward Geocoding</strong>
+      <br/>
+      <em>Convert addresses to coordinates</em>
+    </td>
+    <td align="center">
+      <img src="images/rev_geo.png" alt="Reverse Geocoding Interface" width="400"/>
+      <br/>
+      <strong>Reverse Geocoding</strong>
+      <br/>
+      <em>Get addresses from coordinates</em>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="images/elevation.png" alt="Elevation Lookup Interface" width="400"/>
+      <br/>
+      <strong>Elevation Lookup</strong>
+      <br/>
+      <em>Find elevation data for any location</em>
+    </td>
+    <td align="center">
+      <img src="images/bulk.png" alt="Bulk Processing Interface" width="400"/>
+      <br/>
+      <strong>Bulk Processing</strong>
+      <br/>
+      <em>Process large datasets efficiently</em>
+    </td>
+  </tr>
+</table>
+
 ## 🌟 Features
 
 ### 1. Geocoding
-- Convert addresses to geographic coordinates (Currently only works for US addresses)
-- Automatic address parsing and validation
-- Fallback to postalcode centroids when addresses aren't found
-- Batch processing for multiple addresses with parallel execution
-- State code to full state name conversion
-- Support for various address formats
+- Convert addresses to geographic coordinates (Currently only works for US addresses).
+- Automatic address parsing and validation.
+- Fallback to postalcode centroids when addresses are not found.
+- Batch processing for multiple addresses with parallel execution.
 
 ### 2. Reverse Geocoding  
-- Convert coordinates to human-readable addresses
-- Comprehensive address component extraction (street, city, state, country, etc.)
-- Rate limiting and retry logic for reliable API calls
-- Batch processing support for multiple coordinates
-- Coordinate validation and error handling
-- Worldwide coverage
+- Convert coordinates to human-readable addresses (Worlwide coverage).
+- Comprehensive address component extraction (street, city, state, country, etc.).
+- Rate limiting and retry logic for reliable API calls.
 
 ### 3. Elevation Lookup
-- Get elevation data (MSL) for any set of coordinates
-- High-resolution (30 arc-second) elevation data
-- Nearest-neighbor interpolation for accurate results
-- Bulk processing capabilities for multiple coordinates
-- Support for worldwide coordinates
+- Get elevation data (MSL) for any set of coordinates.
+- High-resolution (30 arc-second) elevation raster dataset.
+- Nearest-neighbor interpolation for accurate results.
 
 ### 4. Web Interface
-- Real-time single query processing with instant results
-- Bulk file upload and download functionality
-- File management system with download history
-- Progress indicators and error handling
+- Real-time single query processing and bulk file upload functionality with instant results.
+- File management system with download history.
 
 ## 🚀 Installation
 
@@ -109,17 +136,6 @@ Access the application at: `http://localhost:5000`
 1. **Bulk Processing Tab**: Upload CSV/Excel files
 2. **File Requirements**: Single column with addresses or coordinates
 3. **Download**: Processed files available in download section
-
-## 🔗 API Endpoints
-
-- `POST /geocode/single` - Single address geocoding
-- `POST /geocode/bulk` - Bulk address geocoding
-- `POST /reverse-geocode/single` - Single coordinate reverse geocoding
-- `POST /reverse-geocode/bulk` - Bulk coordinate reverse geocoding
-- `POST /elevation/single` - Single coordinate elevation lookup
-- `POST /elevation/bulk` - Bulk coordinate elevation lookup
-- `GET /download/<filename>` - Download processed files
-- `GET /list-files` - List available output files
 
 ## 🐛 Troubleshooting
 
