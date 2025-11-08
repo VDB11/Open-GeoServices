@@ -41,9 +41,8 @@ A comprehensive open-source, Flask-based web application for geospatial data pro
 ## 🌟 Features
 
 ### 1. Geocoding
-- Convert addresses to geographic coordinates
+- Convert addresses to geographic coordinates (Updated version with worldwide coverage).
 - Automatic address parsing and validation.
-- Fallback to postalcode centroids when addresses are not found.
 - Batch processing for multiple addresses with parallel execution.
 
 ### 2. Reverse Geocoding  
