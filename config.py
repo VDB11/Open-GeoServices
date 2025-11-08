@@ -25,3 +25,8 @@ REQUEST_TIMEOUT = 5
 # Reverse Geocoding Settings
 REVERSE_GEOCODING_TIMEOUT = 10
 REVERSE_GEOCODING_DELAY = 1
+
+# Geocoding settings for global version
+MAX_RETRIES = 1
+NOMINATIM_DELAY = 5.0
+PHOTON_DELAY = 2.0
