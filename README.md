@@ -41,7 +41,7 @@ A comprehensive open-source, Flask-based web application for geospatial data pro
 ## 🌟 Features
 
 ### 1. Geocoding
-- Convert addresses to geographic coordinates (Currently only works for US addresses).
+- Convert addresses to geographic coordinates
 - Automatic address parsing and validation.
 - Fallback to postalcode centroids when addresses are not found.
 - Batch processing for multiple addresses with parallel execution.
@@ -164,6 +164,6 @@ For any feedbacks or suggestions:
 - **Email**: <vishaldb11@gmail.com>
 
 This project uses open data sources. Please ensure compliance with the following when forking or modifying:
-- US Census Bureau API terms of service
-- Nominatim usage policies  
+- Nominatim usage policies
+- Photon usage policies
 - NOAA ETOPO dataset licensing terms
